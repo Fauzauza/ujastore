@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ujastore/app/modules/home/controllers/profile_controller.dart';
-import 'package:ujastore/app/modules/home/controllers/auth_controller.dart';
-import 'package:ujastore/app/modules/home/views/home_view.dart';
-import 'package:ujastore/app/modules/home/views/signup_view.dart';
+import '../controllers/profile_controller.dart';
+import 'signup_view.dart';
+import 'settings_page.dart';
 
 class LoginView extends StatelessWidget {
-  final ProfileController profileController = Get.find<ProfileController>();
-  final AuthController authController = Get.find<AuthController>();
-
-  // Controllers for input fields
+  final ProfileController controller = Get.put(ProfileController());
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -18,6 +14,7 @@ class LoginView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),
+        backgroundColor: Colors.grey[900],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -27,47 +24,30 @@ class LoginView extends StatelessWidget {
               controller: emailController,
               decoration: InputDecoration(labelText: 'Email'),
             ),
+            SizedBox(height: 10),
             TextField(
               controller: passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
               obscureText: true,
+              decoration: InputDecoration(labelText: 'Password'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                _login(emailController.text, passwordController.text);
+              onPressed: () async {
+                await controller.login(emailController.text, passwordController.text);
+                if (controller.isLoggedIn.value) {
+                  Get.off(() => SettingsPage());
+                }
               },
               child: Text('Login'),
             ),
+            SizedBox(height: 10),
             TextButton(
-              onPressed: () {
-                Get.to(() => SignUpView());
-              },
-              child: Text('Belum punya akun? Daftar'),
+              onPressed: () => Get.to(() => SignUpView()),
+              child: Text('Belum punya akun? Daftar di sini.'),
             ),
           ],
         ),
       ),
     );
-  }
-
-  void _login(String email, String password) async {
-    if (email.isNotEmpty && password.isNotEmpty) {
-      try {
-        bool success = await authController.login(email, password);
-        if (success) {
-          Get.to(() => HomeView()); // Ganti dengan halaman utama aplikasi Anda
-        } else {
-          Get.snackbar(
-              'Login', 'Login gagal. Periksa email dan password Anda.');
-        }
-      } catch (e) {
-        print('Error: $e'); // Log error untuk debugging
-        Get.snackbar(
-            'Error', 'Terjadi kesalahan saat login. Silakan coba lagi.');
-      }
-    } else {
-      Get.snackbar('Login', 'Email dan Password tidak boleh kosong');
-    }
   }
 }

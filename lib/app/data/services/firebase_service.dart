@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Metode untuk mendaftar pengguna baru
   Future<User?> signUp(String email, String password) async {
@@ -10,10 +12,11 @@ class FirebaseService {
         email: email,
         password: password,
       );
-      return userCredential.user; // Mengembalikan user jika berhasil
+      return userCredential.user;
     } catch (e) {
-      print('Firebase signUp error: $e'); // Log error untuk debugging
-      throw e; // Lempar ulang error untuk ditangani di AuthController
+      // Tangani error jika pendaftaran gagal
+      print('Error during sign up: $e');
+      return null; // Mengembalikan null jika terjadi kesalahan
     }
   }
 
@@ -24,52 +27,71 @@ class FirebaseService {
         email: email,
         password: password,
       );
-      return userCredential.user; // Mengembalikan user jika berhasil
+      return userCredential.user;
     } catch (e) {
-      print('Firebase signIn error: $e'); // Log error untuk debugging
-      throw e; // Lempar ulang error untuk ditangani di AuthController
+      // Tangani error jika login gagal
+      print('Error during sign in: $e');
+      return null; // Mengembalikan null jika terjadi kesalahan
     }
   }
 
-  // Metode untuk mengirim kode verifikasi (SMS) ke pengguna
-  Future<void> sendVerificationCode(String phoneNumber, Function(String verificationId) onCodeSent) async {
-    await _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await _auth.signInWithCredential(credential);
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        print('Verification failed: $e');
-        throw e;
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        onCodeSent(verificationId); // Memanggil callback dengan verificationId
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        // Timeout handling jika perlu
-      },
-      timeout: Duration(seconds: 60), // Sesuaikan timeout sesuai kebutuhan Anda
-    );
-  }
-
-  // Metode untuk memverifikasi kode dua faktor
-  Future<bool> verifyTwoFactorCode(String verificationId, String code) async {
+  // Metode untuk mengambil data pengguna dari Firestore
+  Future<Map<String, dynamic>?> getUserData(String email) async {
     try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: code,
-      );
-
-      await _auth.signInWithCredential(credential);
-      return true; // Mengembalikan true jika verifikasi berhasil
+      DocumentSnapshot userDoc = await _firestore.collection('pengguna').doc(email).get();
+      if (userDoc.exists) {
+        return userDoc.data() as Map<String, dynamic>?; // Mengembalikan data pengguna
+      }
+      return null; // Mengembalikan null jika dokumen tidak ditemukan
     } catch (e) {
-      print('Two-factor verification error: $e');
-      throw e; // Lempar ulang error jika terjadi
+      print('Error getting user data: $e');
+      return null; // Mengembalikan null jika terjadi kesalahan
     }
   }
 
-  // Metode untuk logout
-  Future<void> signOut() async {
-    await _auth.signOut();
+  // Metode untuk memperbarui data pengguna di Firestore
+  Future<void> updateUserData(String email, String name, String photoUrl) async {
+    try {
+      await _firestore.collection('pengguna').doc(email).update({
+        'userName': name,
+        'profileImagePath': photoUrl,
+      });
+    } catch (e) {
+      print('Error updating user data: $e');
+    }
   }
+
+  // Metode untuk mengambil pengguna yang sedang login
+  User? getCurrentUser() {
+    try {
+      return _auth.currentUser;
+    } catch (e) {
+      print('Error getting current user: $e');
+      return null; // Mengembalikan null jika pengguna tidak ditemukan
+    }
+  }
+
+  // Metode untuk logout pengguna
+  Future<void> signOut() async {
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      print('Error signing out: $e');
+    }
+  }
+
+  // Metode untuk menyimpan data pengguna baru ke Firestore
+  Future<void> saveUserData(User user, String name, String photoUrl) async {
+  try {
+    await _firestore.collection('pengguna').doc(user.uid).set({
+      'userName': name,
+      'profileImagePath': photoUrl,
+      'email': user.email, // Simpan email pengguna
+    });
+  } catch (e) {
+    print('Error saving user data: $e');
+  }
+}
+
+
 }

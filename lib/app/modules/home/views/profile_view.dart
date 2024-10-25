@@ -9,15 +9,15 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Theme.of(context).scaffoldBackgroundColor, // Warna latar belakang
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Bagian profil
             Padding(
               padding: EdgeInsets.all(16),
               child: Card(
-                color: Theme.of(context).cardColor, // Warna kartu
+                color: Theme.of(context).cardColor,
                 child: Column(
                   children: [
                     Obx(() => ListTile(
@@ -27,42 +27,61 @@ class ProfilePage extends StatelessWidget {
                                   ? FileImage(controller.profileImage!)
                                   : null,
                               child: controller.profileImage == null
-                                  ? Text('BS',
-                                      style: TextStyle(
-                                          color: Colors.white)) // Placeholder
+                                  ? Text(
+                                      controller.userName.value.isNotEmpty
+                                          ? controller.userName.value[0].toUpperCase()
+                                          : 'U', 
+                                      style: TextStyle(color: Colors.white),
+                                    )
                                   : null,
-                              backgroundColor: Theme.of(context)
-                                  .primaryColor, // Warna latar belakang avatar
+                              backgroundColor: Theme.of(context).primaryColor,
                             ),
                           ),
-                          title: Obx(() => Text(controller.userName.value,
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.color))), // Menggunakan bodyLarge
-                          subtitle: Text('Non Membership',
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.color)), // Menggunakan bodyLarge
+                          title: Obx(() => Text(
+                                controller.userName.value.isNotEmpty
+                                    ? controller.userName.value
+                                    : 'Nama Pengguna',
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.color),
+                              )),
+                          subtitle: Obx(() => Text(
+                                controller.email.value.isNotEmpty
+                                    ? controller.email.value
+                                    : 'Email tidak tersedia',
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.color),
+                              )),
                         )),
-
-                    // Tambah tombol ke SettingsPage
+                    // Tombol ke SettingsPage
                     ListTile(
-                      leading: Icon(Icons.settings,
-                          color:
-                              Theme.of(context).iconTheme.color), // Warna ikon
+                      leading: Icon(Icons.settings, color: Theme.of(context).iconTheme.color),
                       title: Text('Pengaturan',
                           style: TextStyle(
                               color: Theme.of(context)
                                   .textTheme
                                   .bodyLarge
-                                  ?.color)), // Menggunakan bodyLarge
+                                  ?.color)),
                       onTap: () {
-                        Get.to(() =>
-                            SettingsPage()); // Navigasi ke halaman Settings
+                        Get.to(() => SettingsPage());
+                      },
+                    ),
+                    // Tambahkan tombol Logout
+                    ListTile(
+                      leading: Icon(Icons.logout, color: Theme.of(context).iconTheme.color),
+                      title: Text('Logout',
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.color)),
+                      onTap: () {
+                        controller.logout();
                       },
                     ),
                   ],

@@ -1,65 +1,153 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
 class ProfileController extends GetxController {
   var imagePath = ''.obs;
-  var balance = 0.obs; // Variabel saldo
-  var userName = 'Bagus Syahrijal'.obs; // Variabel untuk nama pengguna
-  var isLoggedIn = false.obs; // Variabel untuk status login
-  var isDarkMode = false.obs; // Variabel untuk mode tema
+  var balance = 0.obs;
+  var userName = ''.obs;
+  var email = ''.obs;
+  var isLoggedIn = false.obs;
+  var isDarkMode = false.obs;
 
-  // Set path gambar
-  void setImagePath(String path) {
-    imagePath.value = path;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadUserData();
   }
 
-  // Dapatkan gambar profil dari path
-  File? get profileImage =>
-      imagePath.value.isNotEmpty ? File(imagePath.value) : null;
+  void setImagePath(String path) async {
+    imagePath.value = path;
+    File imageFile = File(path);
+    String downloadUrl = await uploadImage(imageFile);
+    imagePath.value = downloadUrl;
+    _saveUserProfile();
+  }
 
-  // Set nama pengguna
+  File? get profileImage => imagePath.value.isNotEmpty ? File(imagePath.value) : null;
+
   void setUserName(String name) {
     userName.value = name;
+    _saveUserProfile();
   }
 
-  // Fungsi untuk login
-  void login(String email, String password) {
-    if (email.isNotEmpty && password.isNotEmpty) {
-      userName.value = email; // Atur nama pengguna
-      isLoggedIn.value = true; // Ubah status login
-      Get.snackbar('Login', 'Login berhasil untuk $email');
-    } else {
-      Get.snackbar('Login', 'Email dan password tidak boleh kosong');
+  Future<void> login(String userEmail, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: userEmail, password: password);
+      email.value = userEmail;
+      isLoggedIn.value = true;
+      await loadUserData();
+      Get.snackbar('Login', 'Login berhasil untuk $userEmail');
+    } catch (e) {
+      Get.snackbar('Login', 'Login gagal: ${e.toString()}');
     }
   }
 
-  // Fungsi untuk signup
-  void signUp(String email, String password) {
-    if (email.isNotEmpty && password.isNotEmpty) {
-      Get.snackbar('Daftar', 'Pendaftaran berhasil untuk $email');
-    } else {
-      Get.snackbar('Daftar', 'Email dan password tidak boleh kosong');
+  Future<void> signUp(String userEmail, String password) async {
+    try {
+      await _auth.createUserWithEmailAndPassword(email: userEmail, password: password);
+      email.value = userEmail;
+      userName.value = userEmail.split('@')[0];
+      isLoggedIn.value = true;
+      await _saveUserProfile();
+      Get.snackbar('Daftar', 'Pendaftaran berhasil untuk $userEmail');
+    } catch (e) {
+      Get.snackbar('Daftar', 'Pendaftaran gagal: ${e.toString()}');
     }
   }
 
-  // Fungsi untuk verifikasi dua langkah
-  void verifyTwoFactor(String code) {
-    if (code == '123456') {
-      Get.snackbar('Verifikasi', 'Verifikasi berhasil');
-    } else {
-      Get.snackbar('Verifikasi', 'Kode verifikasi salah');
+  Future<void> logout() async {
+    await _auth.signOut();
+    userName.value = '';
+    email.value = '';
+    imagePath.value = '';
+    balance.value = 0;
+    isLoggedIn.value = false;
+    Get.snackbar('Logout', 'Anda telah keluar.');
+  }
+
+  Future<void> _saveUserProfile() async {
+    if (email.value.isNotEmpty) {
+      try {
+        await _firestore.collection('pengguna').doc(email.value).set({
+          'userName': userName.value,
+          'profileImagePath': imagePath.value,
+          'balance': balance.value,
+          'email': email.value,
+        }, SetOptions(merge: true));
+        Get.snackbar('Simpan Profil', 'Profil berhasil disimpan.');
+      } catch (e) {
+        Get.snackbar('Simpan Profil', 'Gagal menyimpan data: ${e.toString()}');
+      }
     }
   }
 
-  // Fungsi untuk menghapus foto profil
+  Future<void> loadUserData() async {
+    if (_auth.currentUser != null) {
+      email.value = _auth.currentUser!.email!;
+      try {
+        DocumentSnapshot userDoc = await _firestore.collection('pengguna').doc(email.value).get();
+        if (userDoc.exists) {
+          userName.value = userDoc['userName'] ?? email.value.split('@')[0];
+          imagePath.value = userDoc['profileImagePath'] ?? '';
+          balance.value = (userDoc['balance'] ?? 0) is int ? userDoc['balance'] : 0;
+          isLoggedIn.value = true;
+        } else {
+          Get.snackbar('Data Pengguna', 'Data pengguna tidak ditemukan.');
+        }
+      } catch (e) {
+        Get.snackbar('Load Data', 'Gagal memuat data: ${e.toString()}');
+      }
+    }
+  }
+
   void removeProfileImage() {
-    imagePath.value = ''; // Reset gambar profil
+    imagePath.value = '';
+    _saveUserProfile();
   }
 
-  // Fungsi untuk mengganti tema
   void toggleTheme(bool isDark) {
-    isDarkMode.value = isDark; // Set nilai mode tema
-    Get.changeThemeMode(isDark ? ThemeMode.dark : ThemeMode.light); // Ubah tema
+    isDarkMode.value = isDark;
+    Get.changeThemeMode(isDark ? ThemeMode.dark : ThemeMode.light);
+  }
+
+  Future<void> updateUserNameInFirestore(String name) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      try {
+        await _firestore.collection('pengguna').doc(user.email!).update({
+          'userName': name,
+        });
+        userName.value = name;
+        Get.snackbar('Update Profil', 'Nama pengguna diperbarui.');
+      } catch (e) {
+        Get.snackbar('Update Profil', 'Gagal memperbarui nama: ${e.toString()}');
+      }
+    }
+  }
+
+  Future<void> updateProfileImageInFirestore(String imagePath) async {
+    if (email.value.isNotEmpty) {
+      try {
+        await _firestore.collection('pengguna').doc(email.value).update({'profileImagePath': imagePath});
+        Get.snackbar('Update Profil', 'Gambar profil diperbarui.');
+      } catch (e) {
+        Get.snackbar('Update Profil', 'Gagal memperbarui gambar: ${e.toString()}');
+      }
+    }
+  }
+
+  Future<String> uploadImage(File imageFile) async {
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString(); // Generate a unique file name
+    Reference ref = _storage.ref().child('profile_images/$fileName');
+    await ref.putFile(imageFile);
+    return await ref.getDownloadURL(); // Return the download URL
   }
 }

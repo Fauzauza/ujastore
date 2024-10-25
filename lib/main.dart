@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:ujastore/app/modules/home/controllers/auth_controller.dart';
-import 'app/routes/app_pages.dart'; // Pastikan path ini benar
+import 'package:ujastore/app/modules/home/controllers/auth_controller.dart'; // Sesuaikan path ini
+import 'app/routes/app_pages.dart'; // Sesuaikan path ini
+import 'package:get_storage/get_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Inisialisasi Firebase
-  Get.put(AuthController()); // Inisialisasi AuthController
-  runApp(MyApp());
+  
+  // Inisialisasi Firebase dengan penanganan error
+  await _initializeFirebase();
+
+  // Inisialisasi GetStorage
+  await GetStorage.init();
+
+  // Inisialisasi AuthController setelah GetStorage siap
+  Get.put(AuthController());
+
+  // Jalankan aplikasi setelah inisialisasi selesai
+  runApp(const MyApp());
+}
+
+Future<void> _initializeFirebase() async {
+  try {
+    await Firebase.initializeApp(); // Inisialisasi Firebase
+    print('Firebase Initialized Successfully');
+  } catch (e) {
+    print('Error initializing Firebase: $e');
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -16,14 +35,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final box = GetStorage();
+    bool isDarkMode = box.read('isDarkMode') ?? false;
+
     return GetMaterialApp(
       title: 'ujastore.id',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.blue,
-      ),
+      theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
+      debugShowCheckedModeBanner: false, // Optional: Menghilangkan banner debug
     );
   }
 }
