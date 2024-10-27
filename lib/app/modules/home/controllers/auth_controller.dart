@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/services/firebase_service.dart';
 
 class AuthController extends GetxController {
@@ -13,32 +14,33 @@ class AuthController extends GetxController {
       final user = await _firebaseService.signUp(email, password);
       if (user != null) {
         await _firebaseService.saveUserData(user, name, photoUrl);
-        userName.value = name; // Simpan nama pengguna setelah pendaftaran
-        userEmail.value = email; // Simpan email pengguna setelah pendaftaran
-        return true; // Pendaftaran sukses
+        userName.value = name;
+        userEmail.value = email;
+        await _saveToken(user.uid); // Simpan token saat pendaftaran berhasil
+        return true;
       }
-      return false; // Pendaftaran gagal
+      return false;
     } catch (e) {
       Get.snackbar('Error', 'Pendaftaran gagal: ${e.toString()}');
-      return false; // Menangani error
+      return false;
     }
   }
 
   // Metode untuk login pengguna
- Future<bool> login(String email, String password) async {
-  try {
-    final pengguna = await _firebaseService.signIn(email, password);
-    if (pengguna != null) {
-      await loadUserData(pengguna.uid); // Mengambil data menggunakan uid, bukan email
-      return true;
+  Future<bool> login(String email, String password) async {
+    try {
+      final pengguna = await _firebaseService.signIn(email, password);
+      if (pengguna != null) {
+        await loadUserData(pengguna.uid);
+        await _saveToken(pengguna.uid); // Simpan token saat login berhasil
+        return true;
+      }
+      return false;
+    } catch (e) {
+      Get.snackbar('Error', 'Login gagal: ${e.toString()}');
+      return false;
     }
-    return false;
-  } catch (e) {
-    Get.snackbar('Error', 'Login gagal: ${e.toString()}');
-    return false;
   }
-}
-
 
   // Metode untuk memuat data pengguna dari Firebase
   Future<void> loadUserData(String userId) async {
@@ -59,20 +61,39 @@ class AuthController extends GetxController {
       final user = await _firebaseService.getCurrentUser();
       if (user != null) {
         await _firebaseService.updateUserData(user.email!, name, photoUrl);
-        userName.value = name; // Update nama pengguna
-        return true; // Update berhasil
+        userName.value = name;
+        return true;
       }
-      return false; // Pengguna tidak ditemukan
+      return false;
     } catch (e) {
       Get.snackbar('Error', 'Gagal memperbarui data: ${e.toString()}');
-      return false; // Menangani error
+      return false;
     }
   }
 
   // Metode untuk logout
   Future<void> logout() async {
     await _firebaseService.signOut();
-    userName.value = ''; // Reset nama pengguna saat logout
-    userEmail.value = ''; // Reset email pengguna saat logout
+    userName.value = '';
+    userEmail.value = '';
+    await _clearToken(); // Hapus token saat logout
+  }
+
+  // Metode untuk menyimpan token di SharedPreferences
+  Future<void> _saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('authToken', token); // Menyimpan token
+  }
+
+  // Metode untuk menghapus token dari SharedPreferences
+  Future<void> _clearToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('authToken'); // Menghapus token
+  }
+
+  // Metode untuk mendapatkan token dari SharedPreferences
+  Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('authToken'); // Mengambil token
   }
 }
