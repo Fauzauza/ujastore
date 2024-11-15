@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:ujastore/app/modules/home/widgets/promo_banner.dart';
+import 'package:ujastore/app/modules/home/widgets/promo_banner_slider.dart'; // Pastikan untuk mengimpor kelas yang benar
 import '../widgets/product_grid.dart';
 
-// Widget untuk halaman Home (termasuk PromoBanner dan ProductGrid)
+// Widget untuk halaman Home (termasuk PromoBannerSlider dan ProductGrid)
 class HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Daftar banner yang ingin ditampilkan
+    final List<String> bannerTexts = [
+      'Diskon 50% untuk semua produk!',
+      'Dapatkan gratis ongkir untuk pembelian di atas Rp 200.000!',
+      'Ikuti kami di media sosial untuk update promo terbaru!',
+    ];
+
     return SingleChildScrollView(
-      // Tambahkan SingleChildScrollView di sini
       child: Padding(
         padding: const EdgeInsets.all(0.5),
         child: Column(
           children: [
             const SizedBox(height: 10),
-            const PromoBanner(
-                text: 'Ini Nanti Container Buat Diskon Atau Event'),
-            const PromoBanner(text: 'Ini Juga Sama'),
+            PromoBannerSlider(
+                banners: bannerTexts), // Menggunakan PromoBannerSlider di sini
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.all(8),
@@ -32,8 +37,7 @@ class HomeContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Grid produk
-            ProductGrid(), // Hapus Expanded di sini
+            ProductGrid(), // Menampilkan grid produk
           ],
         ),
       ),

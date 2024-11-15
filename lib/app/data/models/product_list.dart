@@ -1,36 +1,34 @@
-import 'package:get/get.dart';
-import '../../../data/models/product_model.dart';
+// data/models/product_list.dart
+import 'product_model.dart'; // Pastikan path benar untuk Product model
 
-class HomeController extends GetxController {
-  // List produk sebagai contoh
-  var products = <Product>[
-    Product(
+final List<Product> games = [
+  Product(
       name: 'Mobile Legends',
       imageUrl:
           'https://i.pinimg.com/474x/5b/a3/d7/5ba3d73b381296e3b90bb963ad309798.jpg',
-      diamondOptions: [100, 200, 500],
-      diamondPrices: [1000.0, 2000.0, 5000.0],
+      diamondOptions: [5, 10, 12, 19, 28, 33],
+      diamondPrices: [1400.0, 3000.0, 3500.0, 5500.0, 8000.0, 9500.0],
     ),
     Product(
       name: 'PUBG',
       imageUrl:
           'https://i.pinimg.com/474x/30/45/25/304525cb6ae1696a61c4441f7850aace.jpg',
-      diamondOptions: [100, 200, 500],
-      diamondPrices: [1000.0, 2000.0, 5000.0],
+      diamondOptions: [8, 16, 23],
+      diamondPrices: [1666.0, 3666.0, 4666.0],
     ),
     Product(
       name: 'Honor of Kings',
       imageUrl:
           'https://i.pinimg.com/474x/1c/ff/9a/1cff9a1ebb8677d02e5c0d96199b5384.jpg',
-      diamondOptions: [100, 200, 500],
-      diamondPrices: [1000.0, 2000.0, 5000.0],
+      diamondOptions: [5, 10, 12],
+      diamondPrices: [1400.0, 3000.0, 3500.0],
     ),
     Product(
       name: 'Growtopia',
       imageUrl:
           'https://i.pinimg.com/474x/51/01/18/510118500a228b8165d78182bbc41fc3.jpg',
-      diamondOptions: [100, 200, 500],
-      diamondPrices: [1000.0, 2000.0, 5000.0],
+      diamondOptions: [5, 10, 12],
+      diamondPrices: [1400.0, 3000.0, 3500.0],
     ),
     Product(
       name: 'Free Fire',
@@ -67,7 +65,6 @@ class HomeController extends GetxController {
       diamondOptions: [100, 200, 500],
       diamondPrices: [1000.0, 2000.0, 5000.0],
     ),
-    // Menambahkan Call of Duty Mobile
     Product(
       name: 'Call of Duty Mobile',
       imageUrl:
@@ -75,7 +72,6 @@ class HomeController extends GetxController {
       diamondOptions: [100, 200, 500],
       diamondPrices: [1000.0, 2000.0, 5000.0],
     ),
-    // Menambahkan game baru
     Product(
       name: 'Arena of Valor',
       imageUrl:
@@ -104,5 +100,4 @@ class HomeController extends GetxController {
       diamondOptions: [100, 200, 500],
       diamondPrices: [1000.0, 2000.0, 5000.0],
     ),
-  ].obs;
-}
+  ];

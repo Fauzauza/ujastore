@@ -10,4 +10,6 @@ class Product {
     required this.diamondOptions,
     required this.diamondPrices,
   });
+
+  get price => null;
 }

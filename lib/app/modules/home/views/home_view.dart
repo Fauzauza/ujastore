@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
 import '../controllers/profile_controller.dart';
-import 'home_content.dart'; // Menampilkan konten produk
+import 'home_content.dart';
 import 'all_games_page.dart';
 import 'profile_view.dart';
-import 'article_view.dart'; // Impor ArticleView
+import 'article_view.dart';
+import 'cart_view.dart'; // Import CartView
 
 class HomeView extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   static final List<Widget> _pages = <Widget>[
-    HomeContent(), // Menampilkan produk
+    HomeContent(),
     AllGamesPage(),
     ProfilePage(),
   ];
@@ -33,32 +34,37 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Colors.lightBlue[100]!,
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('ujastore.id',
-                style: TextStyle(
-                    color: Theme.of(context).appBarTheme.foregroundColor)),
-            GestureDetector(
-              onTap: () {
-                Get.to(() => ProfilePage()); // Navigasi ke halaman profil
-              },
+        title: Text(
+          'ujastore.id',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Get.to(() => ProfilePage());
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
               child: Obx(() => CircleAvatar(
                     backgroundImage: profileController.profileImage != null
                         ? FileImage(profileController.profileImage!)
                         : null,
                     child: profileController.profileImage == null
-                        ? Icon(Icons.person,
-                            size: 30, color: Colors.grey) // Placeholder
+                        ? Icon(Icons.person, size: 30, color: Colors.grey)
                         : null,
                     radius: 20,
                   )),
             ),
-          ],
-        ),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -66,9 +72,17 @@ class _HomeViewState extends State<HomeView> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColorDark,
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.blueAccent,
+                    Colors.blue,
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Obx(() => CircleAvatar(
                         radius: 40,
@@ -76,60 +90,38 @@ class _HomeViewState extends State<HomeView> {
                             ? FileImage(profileController.profileImage!)
                             : null,
                         child: profileController.profileImage == null
-                            ? Icon(Icons.person,
-                                size: 40, color: Colors.grey) // Placeholder
+                            ? Icon(Icons.person, size: 40, color: Colors.white)
                             : null,
-                        backgroundColor: Colors.grey,
+                        backgroundColor: Colors.grey[300],
                       )),
                   SizedBox(height: 8),
                   Obx(() => Text(
-                        profileController.userName.value,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        profileController.userName.value.isNotEmpty
+                            ? profileController.userName.value
+                            : 'Nama Pengguna',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       )),
                 ],
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Beranda'),
-              onTap: () {
-                setState(() {
-                  _selectedIndex = 0;
-                });
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.games),
-              title: Text('Semua Game'),
-              onTap: () {
-                setState(() {
-                  _selectedIndex = 1;
-                });
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.article), // Ikon untuk Artikel
-              title: Text('Artikel Berita'), // Nama untuk Artikel
-              onTap: () {
-                Get.to(() => ArticleView()); // Navigasi ke ArticleView
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.track_changes),
-              title: Text('Lacak Pesanan'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            
+            _buildDrawerItem(Icons.home, 'Beranda', 0),
+            _buildDrawerItem(Icons.games, 'Semua Game', 1),
+            _buildDrawerItem(Icons.shopping_cart, 'Keranjang', -1, onTap: () {
+              // Navigasi ke CartView
+              Get.to(() => CartView());
+            }),
+            _buildDrawerItem(Icons.article, 'Artikel Berita', -1, onTap: () {
+              Get.to(() => ArticleView());
+            }),
+            _buildDrawerItem(Icons.track_changes, 'Lacak Pesanan', -1),
           ],
         ),
       ),
-      body: _selectedIndex < _pages.length
-          ? _pages[_selectedIndex]
-          : Container(), // Menampilkan halaman lain (HomeContent, AllGamesPage, ProfilePage)
+      body:
+          _selectedIndex < _pages.length ? _pages[_selectedIndex] : Container(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -147,15 +139,30 @@ class _HomeViewState extends State<HomeView> {
             label: 'Profile',
           ),
         ],
-        backgroundColor: Theme.of(context).bottomAppBarColor,
+        backgroundColor: Colors.blue,
         selectedItemColor: Colors.orangeAccent,
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.white,
         showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
-}
 
-extension on ThemeData {
-  get bottomAppBarColor => null;
+  Widget _buildDrawerItem(IconData icon, String title, int index,
+      {VoidCallback? onTap}) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.blue),
+      title: Text(
+        title,
+        style: TextStyle(color: Colors.black),
+      ),
+      onTap: onTap ??
+          () {
+            setState(() {
+              _selectedIndex = index;
+            });
+            Navigator.pop(context);
+          },
+    );
+  }
 }

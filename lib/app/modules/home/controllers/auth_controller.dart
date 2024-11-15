@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/services/firebase_service.dart';
+import '../controllers/cart_controller.dart'; // Import CartController
 
 class AuthController extends GetxController {
   final FirebaseService _firebaseService = FirebaseService();
+  final CartController cartController = Get.find<CartController>(); // Ambil instance dari CartController
 
   var userName = ''.obs; // Variabel untuk menyimpan nama pengguna
   var userEmail = ''.obs; // Variabel untuk menyimpan email pengguna
@@ -29,10 +31,10 @@ class AuthController extends GetxController {
   // Metode untuk login pengguna
   Future<bool> login(String email, String password) async {
     try {
-      final pengguna = await _firebaseService.signIn(email, password);
-      if (pengguna != null) {
-        await loadUserData(pengguna.uid);
-        await _saveToken(pengguna.uid); // Simpan token saat login berhasil
+      final user = await _firebaseService.signIn(email, password);
+      if (user != null) {
+        await loadUserData(user.uid);
+        await _saveToken(user.uid); // Simpan token saat login berhasil
         return true;
       }
       return false;
@@ -55,27 +57,12 @@ class AuthController extends GetxController {
     }
   }
 
-  // Metode untuk memperbarui data pengguna
-  Future<bool> updateUser(String name, String photoUrl) async {
-    try {
-      final user = await _firebaseService.getCurrentUser();
-      if (user != null) {
-        await _firebaseService.updateUserData(user.email!, name, photoUrl);
-        userName.value = name;
-        return true;
-      }
-      return false;
-    } catch (e) {
-      Get.snackbar('Error', 'Gagal memperbarui data: ${e.toString()}');
-      return false;
-    }
-  }
-
   // Metode untuk logout
   Future<void> logout() async {
     await _firebaseService.signOut();
     userName.value = '';
     userEmail.value = '';
+    cartController.clearCart(); // Kosongkan keranjang saat logout
     await _clearToken(); // Hapus token saat logout
   }
 
