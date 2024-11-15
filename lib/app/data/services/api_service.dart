@@ -2,17 +2,16 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class NewsApiService {
-  final String _apiKey = '90032008d11542d0b405507f96b41472';
-  final String _baseUrl = 'https://newsapi.org/v2/';
+  final String _apiKey = '209bbee11dc8265933e3e3365f1390b7';
+  final String _baseUrl = 'https://gnews.io/api/v4/';
 
-  // Mengambil berita seputar game di Indonesia
-  // Mengambil berita seputar game di Indonesia
   Future<List<dynamic>> fetchNewsByQuery(
       {String query = 'esports Indonesia'}) async {
     try {
       final response = await http.get(
         Uri.parse(
-            '${_baseUrl}everything?q=$query&language=id&sortBy=relevancy&apiKey=$_apiKey'),
+          '${_baseUrl}search?q=$query&lang=id&country=id&token=$_apiKey', // Menambahkan parameter country=id
+        ),
       );
 
       if (response.statusCode == 200) {

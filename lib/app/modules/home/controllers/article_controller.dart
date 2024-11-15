@@ -2,30 +2,26 @@ import 'package:get/get.dart';
 import '../../../data/services/api_service.dart';
 
 class ArticleController extends GetxController {
-  // Untuk artikel berita
-  var newsArticles = [].obs;
-  var isLoading = true.obs;
+  var newsArticles = [].obs;  // Menyimpan daftar artikel
+  var isLoading = true.obs;   // Status loading
 
   final NewsApiService _newsApiService = NewsApiService();
 
   @override
   void onInit() {
-    // Fetch berita pada saat controller diinisialisasi
-    fetchEsportsArticles();
     super.onInit();
+    fetchEsportsArticles();  // Mengambil artikel saat controller diinisialisasi
   }
 
-  // Memuat artikel berita tentang esports di Indonesia dari NewsAPI
+  // Fungsi untuk mengambil artikel terkait esports di Indonesia
   void fetchEsportsArticles() async {
     try {
-      isLoading(true);
-      // Mengambil berita dengan kata kunci yang lebih spesifik
-      newsArticles.value =
-          await _newsApiService.fetchNewsByQuery(query: 'esports Indonesia');
+      isLoading(true);  // Menandakan bahwa data sedang dimuat
+      newsArticles.value = await _newsApiService.fetchNewsByQuery(query: 'esports Indonesia');
     } catch (error) {
       print('Error fetching news: $error');
     } finally {
-      isLoading(false);
+      isLoading(false);  // Menandakan bahwa data telah dimuat
     }
   }
 }

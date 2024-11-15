@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/article_controller.dart';
-import 'webview_page.dart'; // Pastikan untuk mengimpor WebViewPage
+import 'webview_page.dart'; // Pastikan untuk mengimpor WebViewPage untuk membuka artikel
 
 class ArticleView extends StatelessWidget {
   final ArticleController articleController = Get.put(ArticleController());
@@ -10,28 +10,32 @@ class ArticleView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Artikel Berita'),
+        title: Text('Artikel Berita eSports'),
       ),
       body: Obx(() {
+        // Jika artikel sedang dimuat
         if (articleController.isLoading.value) {
           return Center(child: CircularProgressIndicator());
         }
 
+        // Jika tidak ada artikel
         if (articleController.newsArticles.isEmpty) {
-          return Center(child: Text('No articles found.'));
+          return Center(child: Text('Tidak ada artikel ditemukan.'));
         }
 
+        // Menampilkan artikel dalam ListView
         return ListView.builder(
           itemCount: articleController.newsArticles.length,
           itemBuilder: (context, index) {
             var news = articleController.newsArticles[index];
+
             return GestureDetector(
               onTap: () {
+                // Jika URL artikel tersedia, buka di WebView
                 if (news['url'] != null) {
-                  Get.to(() => WebViewPage(news['url']));
+                  Get.to(() => WebViewPage(news['url'])); // Buka artikel di WebViewPage
                 } else {
-                  Get.snackbar(
-                      'Error', 'URL tidak tersedia untuk artikel ini.');
+                  Get.snackbar('Error', 'URL tidak tersedia untuk artikel ini.');
                 }
               },
               child: Card(
@@ -39,19 +43,18 @@ class ArticleView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    news['urlToImage'] != null
+                    // Menampilkan gambar artikel jika tersedia
+                    news['image'] != null
                         ? Image.network(
-                            news['urlToImage'],
+                            news['image'],
                             fit: BoxFit.cover,
                             height: 200,
                             width: double.infinity,
-                            errorBuilder: (BuildContext context, Object error,
-                                StackTrace? stackTrace) {
+                            errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
                               return Container(
                                 height: 200,
                                 color: Colors.grey[200],
-                                child:
-                                    Center(child: Text('Failed to load image')),
+                                child: Center(child: Text('Gambar gagal dimuat')),
                               );
                             },
                           )
@@ -70,7 +73,7 @@ class ArticleView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        news['description'] ?? 'No Description',
+                        news['description'] ?? 'Tidak ada deskripsi',
                         style: TextStyle(color: Colors.black54),
                       ),
                     ),

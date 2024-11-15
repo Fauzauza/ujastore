@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ujastore/app/modules/home/controllers/cart_controller.dart';
 import 'package:ujastore/app/modules/home/controllers/auth_controller.dart';
+import 'package:ujastore/app/modules/home/controllers/image_picker_controller.dart';
 import 'package:ujastore/app/modules/home/views/welcome_view.dart';
 import 'app/data/services/firebase_options.dart'; // Mengimpor konfigurasi Firebase
 import 'app/routes/app_pages.dart'; // Mengimpor pengaturan routing aplikasi
@@ -30,6 +31,7 @@ void main() async {
   // Pastikan CartController dan AuthController diinisialisasi terlebih dahulu
   Get.put(CartController(), permanent: true); // Inisialisasi CartController
   Get.put(AuthController(), permanent: true);  // Inisialisasi AuthController
+  Get.put(ImagePickerController());
 
   // Jalankan aplikasi setelah semua inisialisasi selesai
   runApp(const MyApp());

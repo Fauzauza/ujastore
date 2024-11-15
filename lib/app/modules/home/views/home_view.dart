@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ujastore/app/modules/home/views/image_picker_view.dart';
 import '../controllers/home_controller.dart';
 import '../controllers/profile_controller.dart';
 import 'home_content.dart';
@@ -7,8 +8,7 @@ import 'all_games_page.dart';
 import 'profile_view.dart';
 import 'article_view.dart';
 import 'cart_view.dart'; // Import CartView
-import 'audio_view.dart'; // Import AudioView
-import 'youtube_audio_view.dart'; // Import YouTubeAudioView
+
 
 class HomeView extends StatefulWidget {
   @override
@@ -117,13 +117,9 @@ class _HomeViewState extends State<HomeView> {
             _buildDrawerItem(Icons.article, 'Artikel Berita', -1, onTap: () {
               Get.to(() => ArticleView());
             }),
-            _buildDrawerItem(Icons.music_note, 'Audio', -1, onTap: () {
-              Get.to(() => AudioView()); // Navigasi ke AudioView
+            _buildDrawerItem(Icons.image, 'Image Picker', -1, onTap: () {
+              Get.to(() => ImagePickerView()); // Navigasi ke ImagePickerView
             }),
-            _buildDrawerItem(Icons.music_video, 'YouTube Audio', -1, onTap: () {
-              Get.to(() => YouTubeAudioView()); // Navigasi ke YouTubeAudioView
-            }),
-            _buildDrawerItem(Icons.track_changes, 'Lacak Pesanan', -1),
           ],
         ),
       ),
