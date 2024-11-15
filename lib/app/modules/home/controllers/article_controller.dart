@@ -11,17 +11,17 @@ class ArticleController extends GetxController {
   @override
   void onInit() {
     // Fetch berita pada saat controller diinisialisasi
-    fetchNewsArticles();
+    fetchEsportsArticles();
     super.onInit();
   }
 
-  // Memuat artikel berita dari NewsAPI
-  void fetchNewsArticles() async {
+  // Memuat artikel berita tentang esports di Indonesia dari NewsAPI
+  void fetchEsportsArticles() async {
     try {
       isLoading(true);
       // Mengambil berita dengan kata kunci yang lebih spesifik
       newsArticles.value =
-          await _newsApiService.fetchNewsByQuery(query: 'video game');
+          await _newsApiService.fetchNewsByQuery(query: 'esports Indonesia');
     } catch (error) {
       print('Error fetching news: $error');
     } finally {

@@ -7,6 +7,8 @@ import 'all_games_page.dart';
 import 'profile_view.dart';
 import 'article_view.dart';
 import 'cart_view.dart'; // Import CartView
+import 'audio_view.dart'; // Import AudioView
+import 'youtube_audio_view.dart'; // Import YouTubeAudioView
 
 class HomeView extends StatefulWidget {
   @override
@@ -110,11 +112,16 @@ class _HomeViewState extends State<HomeView> {
             _buildDrawerItem(Icons.home, 'Beranda', 0),
             _buildDrawerItem(Icons.games, 'Semua Game', 1),
             _buildDrawerItem(Icons.shopping_cart, 'Keranjang', -1, onTap: () {
-              // Navigasi ke CartView
               Get.to(() => CartView());
             }),
             _buildDrawerItem(Icons.article, 'Artikel Berita', -1, onTap: () {
               Get.to(() => ArticleView());
+            }),
+            _buildDrawerItem(Icons.music_note, 'Audio', -1, onTap: () {
+              Get.to(() => AudioView()); // Navigasi ke AudioView
+            }),
+            _buildDrawerItem(Icons.music_video, 'YouTube Audio', -1, onTap: () {
+              Get.to(() => YouTubeAudioView()); // Navigasi ke YouTubeAudioView
             }),
             _buildDrawerItem(Icons.track_changes, 'Lacak Pesanan', -1),
           ],
