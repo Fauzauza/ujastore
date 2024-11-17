@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ujastore/app/modules/home/views/home_view.dart';
 import '../controllers/profile_controller.dart';
 import 'login_view.dart';
 
@@ -79,7 +80,7 @@ class SignUpView extends StatelessWidget {
                       await controller.signUp(
                           emailController.text, passwordController.text);
                       if (controller.isLoggedIn.value) {
-                        Get.off(() => LoginView());
+                        Get.off(() => HomeView());
                       }
                     },
                     style: ElevatedButton.styleFrom(

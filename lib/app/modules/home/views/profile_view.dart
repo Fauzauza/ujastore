@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ujastore/app/modules/home/views/login_view.dart';
 import '../controllers/profile_controller.dart';
 import 'settings_page.dart'; // Tambahkan import ke SettingsPage
 
@@ -91,12 +92,17 @@ class ProfilePage extends StatelessWidget {
                       // Tambahkan tombol Logout
                       ListTile(
                         leading: Icon(Icons.logout, color: Colors.redAccent),
-                        title: Text('Logout',
+                        title: Text(
+                                  controller.isLoggedIn.isTrue
+                                      ? 'Logout'
+                                      : 'Login',
                             style: TextStyle(
                                 color: Colors.redAccent, // Warna teks logout
                                 fontWeight: FontWeight.bold)),
                         onTap: () {
-                          controller.logout();
+                          controller.isLoggedIn.isTrue
+                                      ? controller.logout()
+                                      : Get.to(LoginView());
                         },
                       ),
                     ],

@@ -31,7 +31,8 @@ class ProfileController extends GetxController {
     _saveUserProfile();
   }
 
-  File? get profileImage => imagePath.value.isNotEmpty ? File(imagePath.value) : null;
+  File? get profileImage =>
+      imagePath.value.isNotEmpty ? File(imagePath.value) : null;
 
   void setUserName(String name) {
     userName.value = name;
@@ -40,7 +41,8 @@ class ProfileController extends GetxController {
 
   Future<void> login(String userEmail, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: userEmail, password: password);
+      await _auth.signInWithEmailAndPassword(
+          email: userEmail, password: password);
       email.value = userEmail;
       isLoggedIn.value = true;
       await loadUserData();
@@ -52,7 +54,8 @@ class ProfileController extends GetxController {
 
   Future<void> signUp(String userEmail, String password) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: userEmail, password: password);
+      await _auth.createUserWithEmailAndPassword(
+          email: userEmail, password: password);
       email.value = userEmail;
       userName.value = userEmail.split('@')[0];
       isLoggedIn.value = true;
@@ -93,11 +96,13 @@ class ProfileController extends GetxController {
     if (_auth.currentUser != null) {
       email.value = _auth.currentUser!.email!;
       try {
-        DocumentSnapshot userDoc = await _firestore.collection('pengguna').doc(email.value).get();
+        DocumentSnapshot userDoc =
+            await _firestore.collection('pengguna').doc(email.value).get();
         if (userDoc.exists) {
           userName.value = userDoc['userName'] ?? email.value.split('@')[0];
           imagePath.value = userDoc['profileImagePath'] ?? '';
-          balance.value = (userDoc['balance'] ?? 0) is int ? userDoc['balance'] : 0;
+          balance.value =
+              (userDoc['balance'] ?? 0) is int ? userDoc['balance'] : 0;
           isLoggedIn.value = true;
         } else {
           Get.snackbar('Data Pengguna', 'Data pengguna tidak ditemukan.');
@@ -113,9 +118,9 @@ class ProfileController extends GetxController {
     _saveUserProfile();
   }
 
-  void toggleTheme(bool isDark) {
-    isDarkMode.value = isDark;
-    Get.changeThemeMode(isDark ? ThemeMode.dark : ThemeMode.light);
+  void toggleTheme() {
+    isDarkMode.value = !isDarkMode.value;
+    Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
   }
 
   Future<void> updateUserNameInFirestore(String name) async {
@@ -128,7 +133,8 @@ class ProfileController extends GetxController {
         userName.value = name;
         Get.snackbar('Update Profil', 'Nama pengguna diperbarui.');
       } catch (e) {
-        Get.snackbar('Update Profil', 'Gagal memperbarui nama: ${e.toString()}');
+        Get.snackbar(
+            'Update Profil', 'Gagal memperbarui nama: ${e.toString()}');
       }
     }
   }
@@ -136,16 +142,22 @@ class ProfileController extends GetxController {
   Future<void> updateProfileImageInFirestore(String imagePath) async {
     if (email.value.isNotEmpty) {
       try {
-        await _firestore.collection('pengguna').doc(email.value).update({'profileImagePath': imagePath});
+        await _firestore
+            .collection('pengguna')
+            .doc(email.value)
+            .update({'profileImagePath': imagePath});
         Get.snackbar('Update Profil', 'Gambar profil diperbarui.');
       } catch (e) {
-        Get.snackbar('Update Profil', 'Gagal memperbarui gambar: ${e.toString()}');
+        Get.snackbar(
+            'Update Profil', 'Gagal memperbarui gambar: ${e.toString()}');
       }
     }
   }
 
   Future<String> uploadImage(File imageFile) async {
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString(); // Generate a unique file name
+    String fileName = DateTime.now()
+        .millisecondsSinceEpoch
+        .toString(); // Generate a unique file name
     Reference ref = _storage.ref().child('profile_images/$fileName');
     await ref.putFile(imageFile);
     return await ref.getDownloadURL(); // Return the download URL

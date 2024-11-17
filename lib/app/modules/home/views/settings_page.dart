@@ -91,7 +91,7 @@ class SettingsPage extends StatelessWidget {
                   title: Text('Mode Gelap', style: TextStyle(fontSize: 18)),
                   value: controller.isDarkMode.value,
                   onChanged: (value) {
-                    controller.toggleTheme(value);
+                    controller.toggleTheme();
                   },
                   activeColor: Colors.blueAccent, // Warna aktif switch
                 );

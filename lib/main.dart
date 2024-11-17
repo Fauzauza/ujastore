@@ -3,8 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:ujastore/app/modules/home/controllers/cart_controller.dart';
+import 'package:ujastore/app/modules/home/bindings/home_binding.dart';
 import 'package:ujastore/app/modules/home/controllers/auth_controller.dart';
+import 'package:ujastore/app/modules/home/controllers/cart_controller.dart';
 import 'package:ujastore/app/modules/home/controllers/image_picker_controller.dart';
 import 'package:ujastore/app/modules/home/views/welcome_view.dart';
 import 'app/data/services/firebase_options.dart'; // Mengimpor konfigurasi Firebase
@@ -28,8 +29,8 @@ void main() async {
   await messagingHandler.initLocalNotification();
   await messagingHandler.initPushNotification();
 
-  // Pastikan CartController dan AuthController diinisialisasi terlebih dahulu
-  Get.put(CartController(), permanent: true); // Inisialisasi CartController
+    Get.put(CartController(),permanent: false); // Inisialisasi CartController
+// Pastikan CartController dan AuthController diinisialisasi terlebih dahulu
   Get.put(AuthController(), permanent: true);  // Inisialisasi AuthController
   Get.put(ImagePickerController());
 
@@ -42,14 +43,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final box = GetStorage();
-    bool isDarkMode = box.read('isDarkMode') ?? false;
+ 
 
     return GetMaterialApp(
       title: 'ujastore.id',
-      theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
       initialRoute: '/welcome', // Set WelcomeView sebagai route awal
-      getPages: [
+      initialBinding: HomeBinding(),
+            getPages: [
         GetPage(
           name: '/welcome',
           page: () => WelcomeView(),
@@ -57,6 +59,7 @@ class MyApp extends StatelessWidget {
         ),
         ...AppPages.routes, // Tambahkan rute aplikasi lainnya
       ],
+
       debugShowCheckedModeBanner: false,
     );
   }

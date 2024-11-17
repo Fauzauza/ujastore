@@ -1,10 +1,13 @@
 // lib/modules/home/views/cart_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/cart_controller.dart';
+import 'package:ujastore/app/modules/home/controllers/cart_controller.dart';
+import 'package:ujastore/app/modules/home/controllers/profile_controller.dart';
 
-class CartView extends StatelessWidget {
-  final CartController cartController = Get.find();
+class CartView extends GetView<CartController> {
+  
+ 
+  final profileC = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -14,15 +17,15 @@ class CartView extends StatelessWidget {
         backgroundColor: Colors.blueAccent,
       ),
       body: Obx(() {
-        if (cartController.cartItems.isEmpty) {
+        if (controller.cartItems.isEmpty) {
           return Center(
             child: Text("Keranjang kosong"),
           );
         }
         return ListView.builder(
-          itemCount: cartController.cartItems.length,
+          itemCount: controller.cartItems.length,
           itemBuilder: (context, index) {
-            final item = cartController.cartItems[index];
+            final item = controller.cartItems[index];
             return Card(
               margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               elevation: 4,
@@ -42,7 +45,7 @@ class CartView extends StatelessWidget {
                 trailing: IconButton(
                   icon: Icon(Icons.remove_circle, color: Colors.red),
                   onPressed: () {
-                    cartController.removeFromCart(item);
+                    controller.removeFromCart(profileC.email.value,controller.cartItems[index].itemId);
                   },
                 ),
               ),
@@ -58,13 +61,13 @@ class CartView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Total Item: ${cartController.cartItems.length}",
+                "Total Item: ${controller.cartItems.length}",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               ElevatedButton(
                 onPressed: () {
-                  if (cartController.cartItems.isNotEmpty) {
-                    cartController.clearCart();
+                  if (controller.cartItems.isNotEmpty) {
+                    controller.clearCart(profileC.email.value);
                     Get.snackbar(
                       "Berhasil",
                       "Semua item berhasil dibeli!",

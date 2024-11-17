@@ -62,7 +62,8 @@ class AuthController extends GetxController {
     await _firebaseService.signOut();
     userName.value = '';
     userEmail.value = '';
-    cartController.clearCart(); // Kosongkan keranjang saat logout
+    Get.delete<CartController>();
+    cartController.cartItems.clear(); // Hapus instance CartController
     await _clearToken(); // Hapus token saat logout
   }
 

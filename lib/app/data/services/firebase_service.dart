@@ -1,6 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:ujastore/app/data/models/cart_item_model.dart';
+import 'package:ujastore/app/modules/home/controllers/cart_controller.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -151,6 +155,8 @@ class FirebaseService {
   Future<void> signOut() async {
     try {
       await _auth.signOut();
+      Get.delete<CartController>();
+
     } catch (e) {
       print('Error signing out: $e');
     }

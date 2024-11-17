@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ujastore/app/modules/home/views/image_picker_view.dart';
-import '../controllers/home_controller.dart';
 import '../controllers/profile_controller.dart';
 import 'home_content.dart';
 import 'all_games_page.dart';
@@ -16,8 +15,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final HomeController homeController = Get.put(HomeController());
   final ProfileController profileController = Get.put(ProfileController());
+
 
   int _selectedIndex = 0;
 
