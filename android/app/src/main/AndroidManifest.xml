@@ -1,0 +1,51 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Izin mikrofon -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    
+    <!-- Izin lokasi untuk aplikasi -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    
+    <!-- Izin lokasi di background -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <application
+        android:label="ujastore"
+        android:icon="@mipmap/ic_launcher">
+        
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Meta-data untuk notifikasi Firebase -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="channel_notification" />
+
+        <!-- Tambahkan Meta-data untuk Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBs2x6gX6j9WxU-zC_WqSo7gmGhR9W-_0U"/>
+
+        <!-- Jangan hapus meta-data berikut -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+
+    <!-- Query intent untuk teks -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+    </queries>
+</manifest>
