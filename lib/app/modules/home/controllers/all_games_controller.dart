@@ -5,8 +5,7 @@ import 'package:ujastore/app/data/models/product_list.dart';
 import 'package:ujastore/app/data/models/product_model.dart';
 
 class AllGamesController extends GetxController {
-  RxList<Product> filteredGames =
-      <Product>[].obs; // Inisialisasi dengan daftar kosong
+  RxList<Product> filteredGames = <Product>[].obs;
   stt.SpeechToText speech = stt.SpeechToText();
   bool isListening = false;
   String searchQuery = '';

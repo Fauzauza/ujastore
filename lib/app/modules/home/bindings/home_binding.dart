@@ -10,6 +10,6 @@ class HomeBinding extends Bindings {
     Get.lazyPut<HomeController>(() => HomeController());
     Get.lazyPut<ImagePickerController>(() => ImagePickerController());
     Get.lazyPut<CartController>(() => CartController());
-    Get.lazyPut<AllGamesController>(() => AllGamesController());
+    Get.put(AllGamesController());
   }
 }

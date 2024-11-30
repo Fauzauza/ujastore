@@ -9,13 +9,16 @@ class PromoBannerSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100, // Tinggi banner
+      height: 180, // Tinggi banner
       child: PageView.builder(
         itemCount: banners.length,
         itemBuilder: (context, index) {
-          return PromoBanner(
-              text:
-                  banners[index]); // Menggunakan PromoBanner untuk setiap teks
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: PromoBanner(
+                text:
+                    banners[index]),
+          ); // Menggunakan PromoBanner untuk setiap teks
         },
       ),
     );

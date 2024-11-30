@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ujastore/app/modules/home/controllers/all_games_controller.dart';
-import 'product_detail_view.dart';
+import 'package:ujastore/app/routes/app_routes.dart';
 
 class AllGamesPage extends GetView<AllGamesController> {
   const AllGamesPage({super.key});
@@ -9,9 +9,10 @@ class AllGamesPage extends GetView<AllGamesController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 40, 36, 52),
       appBar: AppBar(
         title: Text('Semua Game'),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: const Color.fromARGB(255, 53, 53, 68),
         actions: [
           IconButton(
             icon: Icon(controller.isListening ? Icons.mic : Icons.mic_none),
@@ -21,8 +22,7 @@ class AllGamesPage extends GetView<AllGamesController> {
           ),
         ],
       ),
-      body: Container(
-        color: Colors.lightBlue[50],
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -44,43 +44,39 @@ class AllGamesPage extends GetView<AllGamesController> {
                   ),
                 ),
               ),
-              Obx(() => Expanded(
-                    child: ListView.builder(
-                      itemCount: controller.filteredGames.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          margin: EdgeInsets.symmetric(vertical: 4),
-                          color: Colors.white,
-                          shadowColor: Colors.black.withOpacity(0.2),
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: ListTile(
-                            leading: ClipOval(
-                              child: Image.network(
-                                controller.filteredGames[index].imageUrl,
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            title: Text(
-                              controller.filteredGames[index].name,
-                              style: TextStyle(
-                                color: Colors.blueAccent,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            onTap: () {
-                              Get.to(() => ProductDetailView(
-                                  product: controller.filteredGames[index]));
-                            },
-                          ),
-                        );
+              Obx(
+                () => GridView.builder(
+                  shrinkWrap: true, // Tambahkan ini
+                  physics:
+                      NeverScrollableScrollPhysics(), // Nonaktifkan scrolling GridView
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 20,
+                  ),
+                  itemCount: controller.filteredGames.length,
+                  itemBuilder: (context, index) {
+                    final product = controller.filteredGames[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Get.toNamed(Routes.PRODUCT_DETAIL, arguments: product);
                       },
-                    ),
-                  )),
+                      child: Container(
+                        width: (Get.width / 3) - 15,
+                        height: ((Get.width / 3) - 15) * 1.5,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: DecorationImage(
+                            image: NetworkImage(product.imageUrl),
+                            fit: BoxFit.cover,
+                            alignment: Alignment.bottomCenter,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),

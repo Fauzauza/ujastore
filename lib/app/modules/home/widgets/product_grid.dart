@@ -21,7 +21,6 @@ class ProductGrid extends StatelessWidget {
         final product = controller.products[index];
         return GestureDetector(
           onTap: () {
-            // Navigasi ke halaman detail produk dengan membawa data produk
             Get.toNamed(Routes.PRODUCT_DETAIL, arguments: product);
           },
           child: Container(
@@ -34,26 +33,6 @@ class ProductGrid extends StatelessWidget {
                 fit: BoxFit.cover,
                 alignment: Alignment.bottomCenter,
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  color: Colors.black54, // Warna latar belakang untuk kontras
-                  child: Column(
-                    children: [
-                      Text(
-                        product.name,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                      // Bagian harga dihapus
-                    ],
-                  ),
-                ),
-              ],
             ),
           ),
         );

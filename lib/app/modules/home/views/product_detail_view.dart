@@ -17,7 +17,8 @@ class ProductDetailView extends StatefulWidget {
 
 class _ProductDetailViewState extends State<ProductDetailView> {
   final CartController cartController = Get.put(CartController());
-  final AudioController audioController = Get.put(AudioController()); // Inisialisasi AudioController
+  final AudioController audioController =
+      Get.put(AudioController()); // Inisialisasi AudioController
 
   final TextEditingController userIdController = TextEditingController();
   final TextEditingController serverIdController = TextEditingController();
@@ -65,23 +66,33 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                                 ? 'https://drive.google.com/uc?export=download&id=1E7OdPf2-Aazh__FKccyJwOWskqv4FLC-' // URL untuk Valorant
                                 : widget.product.name == 'Genshin Impact'
                                     ? 'https://drive.google.com/uc?export=download&id=1BPLOYZUC4B_F2kIgyUSNSSp2nr2ZKaG6' // URL untuk Genshin Impact
-                                    : widget.product.name == 'Call of Duty Mobile'
+                                    : widget.product.name ==
+                                            'Call of Duty Mobile'
                                         ? 'https://drive.google.com/uc?export=download&id=1cSUj2iNiPaaGyn9NQ2CmAX2r5cWqfrlX' // URL untuk Call of Duty Mobile
-                                        : widget.product.name == 'Arena of Valor'
+                                        : widget.product.name ==
+                                                'Arena of Valor'
                                             ? 'https://drive.google.com/uc?export=download&id=1fRZbszgdPu5ewC3fIJTA3BeobwjBGUPI' // URL untuk Arena of Valor
-                                            : widget.product.name == 'Point Blank'
+                                            : widget.product.name ==
+                                                    'Point Blank'
                                                 ? 'https://drive.google.com/uc?export=download&id=1VLXyDuUFeW9Zq3bTzLZl550b4NmNAyg1' // URL untuk Point Blank
-                                                : widget.product.name == 'Ragnarok M: Eternal Love'
+                                                : widget.product.name ==
+                                                        'Ragnarok M: Eternal Love'
                                                     ? 'https://drive.google.com/uc?export=download&id=1IP7FuU9P6TVAEGy9DhJeHPLpcgg8vJYP' // URL untuk Ragnarok M: Eternal Love
-                                                    : widget.product.name == 'Stumble Guys'
+                                                    : widget.product.name ==
+                                                            'Stumble Guys'
                                                         ? 'https://drive.google.com/uc?export=download&id=1vbRQT4z-AgBVNYApVhZWhh9jgMaMGX81' // URL untuk Stumble Guys
                                                         : '';
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 40, 36, 52),
       appBar: AppBar(
-        title: Text(widget.product.name),
-        backgroundColor: Colors.blueAccent,
-        elevation: 5,
+        title: Text(
+          widget.product.name,
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 53, 53, 68),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -118,7 +129,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: const Color.fromARGB(221, 255, 255, 255),
                 ),
               ),
               SizedBox(height: 12),
@@ -154,23 +165,29 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                   widget.product.name == 'Ragnarok M: Eternal Love' ||
                   widget.product.name == 'Stumble Guys') ...[
                 SizedBox(height: 20),
-                Text('ID User:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                Text('ID User:',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 TextField(
                   controller: userIdController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Masukkan ID User Anda',
-                    contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   ),
                 ),
                 SizedBox(height: 10),
-                Text('ID Server:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                Text('ID Server:',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 TextField(
                   controller: serverIdController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Masukkan ID Server Anda',
-                    contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -180,13 +197,16 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.play_arrow, size: 32, color: Colors.green), // Ukuran ikon dikurangi
+                      icon: Icon(Icons.play_arrow,
+                          size: 32,
+                          color: Colors.green), // Ukuran ikon dikurangi
                       onPressed: () {
                         audioController.playAudio(audioUrl); // Memutar audio
                       },
                     ),
                     IconButton(
-                      icon: Icon(Icons.stop, size: 32, color: Colors.red), // Ukuran ikon dikurangi
+                      icon: Icon(Icons.stop,
+                          size: 32, color: Colors.red), // Ukuran ikon dikurangi
                       onPressed: () {
                         audioController.stopAudio(); // Menghentikan audio
                       },

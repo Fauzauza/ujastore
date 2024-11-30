@@ -14,7 +14,7 @@ class CartView extends GetView<CartController> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Keranjang"),
-        backgroundColor: Colors.blueAccent,
+          backgroundColor: const Color.fromARGB(255, 53, 53, 68),
       ),
       body: Obx(() {
         if (controller.cartItems.isEmpty) {

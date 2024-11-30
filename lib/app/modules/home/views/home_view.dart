@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ujastore/app/modules/home/views/all_games_page.dart';
 import 'package:ujastore/app/modules/home/views/image_picker_view.dart';
+import 'package:ujastore/app/modules/home/views/login_view.dart';
 import '../controllers/profile_controller.dart';
 import 'home_content.dart';
-import 'all_games_page.dart';
-import 'profile_view.dart';
 import 'article_view.dart';
-import 'cart_view.dart'; // Import CartView
-
+import 'cart_view.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -17,152 +16,79 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final ProfileController profileController = Get.put(ProfileController());
 
-
-  int _selectedIndex = 0;
-
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    setState(() {});
   }
-
-  static final List<Widget> _pages = <Widget>[
-    HomeContent(),
-    AllGamesPage(),
-    ProfilePage(),
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue[100]!,
-      appBar: AppBar(
-        title: Text(
-          'ujastore.id',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.blueAccent,
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Get.to(() => ProfilePage());
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Obx(() => CircleAvatar(
-                    backgroundImage: profileController.profileImage != null
-                        ? FileImage(profileController.profileImage!)
-                        : null,
-                    child: profileController.profileImage == null
-                        ? Icon(Icons.person, size: 30, color: Colors.grey)
-                        : null,
-                    radius: 20,
-                  )),
+        backgroundColor: Color.fromARGB(255, 40, 36, 52),
+        appBar: AppBar(
+          toolbarHeight: 70,
+          title: Image(
+            image: AssetImage(
+              'assets/logo.png',
             ),
+            width: 70,
+            height: 70,
           ),
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.blueAccent,
-                    Colors.blue,
+          centerTitle: false,
+          backgroundColor: const Color.fromARGB(255, 53, 53, 68),
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+        drawer: Drawer(
+          backgroundColor: const Color.fromARGB(255, 53, 53, 68),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                padding: EdgeInsets.zero,
+                decoration:
+                    BoxDecoration(color: const Color.fromARGB(255, 53, 53, 68)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image(
+                      image: AssetImage(
+                        'assets/logo.png',
+                      ),
+                      width: 135,
+                      height: 135,
+                    ),
                   ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Obx(() => CircleAvatar(
-                        radius: 40,
-                        backgroundImage: profileController.profileImage != null
-                            ? FileImage(profileController.profileImage!)
-                            : null,
-                        child: profileController.profileImage == null
-                            ? Icon(Icons.person, size: 40, color: Colors.white)
-                            : null,
-                        backgroundColor: Colors.grey[300],
-                      )),
-                  SizedBox(height: 8),
-                  Obx(() => Text(
-                        profileController.userName.value.isNotEmpty
-                            ? profileController.userName.value
-                            : 'Nama Pengguna',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
-                      )),
-                ],
-              ),
-            ),
-            _buildDrawerItem(Icons.home, 'Beranda', 0),
-            _buildDrawerItem(Icons.games, 'Semua Game', 1),
-            _buildDrawerItem(Icons.shopping_cart, 'Keranjang', -1, onTap: () {
-              Get.to(() => CartView());
-            }),
-            _buildDrawerItem(Icons.article, 'Artikel Berita', -1, onTap: () {
-              Get.to(() => ArticleView());
-            }),
-            _buildDrawerItem(Icons.image, 'Image Picker', -1, onTap: () {
-              Get.to(() => ImagePickerView()); // Navigasi ke ImagePickerView
-            }),
-          ],
+              _buildDrawerItem(Icons.home, 'Beranda', 0, onTap: (){Get.to(ImagePickerView());}),
+              _buildDrawerItem(Icons.games, 'Semua Game', 1, onTap: (){
+                Get.to(AllGamesPage());
+              }),
+              _buildDrawerItem(Icons.shopping_cart, 'Keranjang', -1, onTap: () {
+                Get.to(() => CartView());
+              }),
+              _buildDrawerItem(Icons.article, 'Artikel Berita', -1, onTap: () {
+                Get.to(() => ArticleView());
+              }),
+              _buildDrawerItem(Icons.person, 'Login', -1, onTap: () {
+                Get.to(() => LoginView()); // Navigasi ke ImagePickerView
+              }),
+            ],
+          ),
         ),
-      ),
-      body:
-          _selectedIndex < _pages.length ? _pages[_selectedIndex] : Container(),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Cari Game',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        backgroundColor: Colors.blue,
-        selectedItemColor: Colors.orangeAccent,
-        unselectedItemColor: Colors.white,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-      ),
-    );
+        body: HomeContent());
   }
 
   Widget _buildDrawerItem(IconData icon, String title, int index,
       {VoidCallback? onTap}) {
     return ListTile(
-      leading: Icon(icon, color: Colors.blue),
+      leading: Icon(icon, color: const Color.fromARGB(255, 255, 255, 255)),
       title: Text(
         title,
-        style: TextStyle(color: Colors.black),
+        style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
       ),
       onTap: onTap ??
           () {
-            setState(() {
-              _selectedIndex = index;
-            });
+            setState(() {});
             Navigator.pop(context);
           },
     );
