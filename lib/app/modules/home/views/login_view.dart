@@ -19,7 +19,7 @@ class LoginView extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Aksi untuk kembali ke halaman sebelumnya
+            Navigator.pop(context);
           },
         ),
       ),
@@ -31,14 +31,12 @@ class LoginView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Judul dengan gaya yang menarik
               Image.asset(
-                'assets/logo.png', // Path gambar logo
-                width: 100, // Lebar logo
-                height: 100, // Tinggi logo
+                'assets/logo.png',
+                width: 100,
+                height: 100,
               ),
               SizedBox(height: 20),
-              // Logo Aplikasi
               Text(
                 'Selamat Datang',
                 style: TextStyle(
@@ -68,6 +66,7 @@ class LoginView extends StatelessWidget {
                     borderSide: BorderSide.none,
                   ),
                 ),
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 10),
               // Input Password
@@ -83,6 +82,7 @@ class LoginView extends StatelessWidget {
                     borderSide: BorderSide.none,
                   ),
                 ),
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 20),
               // Tombol Login
@@ -125,7 +125,8 @@ class LoginView extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
                     child: Text(
                       'Belum punya akun?',
                       style: TextStyle(color: Colors.white), // Warna teks
@@ -140,25 +141,25 @@ class LoginView extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10),
-               SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => {Get.to(() => SignUpView())},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(30), // Sudut melengkung
-                      ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => {Get.to(() => SignUpView())},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(30), // Sudut melengkung
                     ),
-                    child: Text('Register',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                        )),
                   ),
-                )
+                  child: Text('Register',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      )),
+                ),
+              )
             ],
           ),
         ),

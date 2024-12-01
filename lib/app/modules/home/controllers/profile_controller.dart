@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
+import 'package:ujastore/app/modules/home/views/home_view.dart';
+
 class ProfileController extends GetxController {
   var imagePath = ''.obs;
   var balance = 0.obs;
@@ -32,6 +34,7 @@ class ProfileController extends GetxController {
   }
 
   File? get profileImage =>
+  
       imagePath.value.isNotEmpty ? File(imagePath.value) : null;
 
   void setUserName(String name) {
@@ -74,6 +77,7 @@ class ProfileController extends GetxController {
     balance.value = 0;
     isLoggedIn.value = false;
     Get.snackbar('Logout', 'Anda telah keluar.');
+    Get.offAll(HomeView());
   }
 
   Future<void> _saveUserProfile() async {

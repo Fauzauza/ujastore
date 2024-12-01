@@ -1,7 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Tambahkan izin mikrofon di sini -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>    
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    
+    <!-- Izin lokasi di background -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
         android:label="ujastore"
@@ -21,14 +25,20 @@
         <!-- Meta-data untuk notifikasi Firebase -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="channel_notification" /> <!-- Pastikan ini sesuai dengan Channel ID yang Anda gunakan -->
+            android:value="channel_notification" />
 
-        <!-- Jangan hapus meta-data berikut. -->
+        <!-- Tambahkan Meta-data untuk Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBs2x6gX6j9WxU-zC_WqSo7gmGhR9W-_0U"/>
+
+        <!-- Jangan hapus meta-data berikut -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
 
+    <!-- Query intent untuk teks -->
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>

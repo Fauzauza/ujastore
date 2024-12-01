@@ -29,12 +29,10 @@ void main() async {
   await messagingHandler.initLocalNotification();
   await messagingHandler.initPushNotification();
 
-    Get.put(CartController(),permanent: false); // Inisialisasi CartController
-// Pastikan CartController dan AuthController diinisialisasi terlebih dahulu
-  Get.put(AuthController(), permanent: true);  // Inisialisasi AuthController
+  Get.put(CartController(), permanent: false); // Inisialisasi CartController
+  Get.put(AuthController(), permanent: true); // Inisialisasi AuthController
   Get.put(ImagePickerController());
 
-  // Jalankan aplikasi setelah semua inisialisasi selesai
   runApp(const MyApp());
 }
 
@@ -43,15 +41,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
- 
-
     return GetMaterialApp(
       title: 'ujastore.id',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       initialRoute: '/welcome', // Set WelcomeView sebagai route awal
       initialBinding: HomeBinding(),
-            getPages: [
+      getPages: [
         GetPage(
           name: '/welcome',
           page: () => WelcomeView(),

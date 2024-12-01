@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ujastore/app/modules/home/views/home_view.dart';
 import '../controllers/profile_controller.dart';
-import 'login_view.dart';
 
 class SignUpView extends StatelessWidget {
   final ProfileController controller = Get.put(ProfileController());
@@ -38,7 +37,6 @@ class SignUpView extends StatelessWidget {
                 height: 100, // Tinggi logo
               ),
               SizedBox(height: 20),
-              // Logo Aplikasi
               Text(
                 'Daftar',
                 style: TextStyle(
@@ -49,7 +47,7 @@ class SignUpView extends StatelessWidget {
               ),
               SizedBox(height: 5),
               Text(
-                'Silahkan masukkan akun terdaftar anda.',
+                'Silahkan masukkan akun yang ingin anda daftarkan.',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.white,
@@ -73,6 +71,7 @@ class SignUpView extends StatelessWidget {
               SizedBox(height: 10),
               // Input Password
               TextField(
+                style: TextStyle(color: Colors.black),
                 controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
@@ -126,7 +125,8 @@ class SignUpView extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
                     child: Text(
                       'Belum punya akun?',
                       style: TextStyle(color: Colors.white), // Warna teks
@@ -141,25 +141,25 @@ class SignUpView extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 10),
-               SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => {Get.to(() => SignUpView())},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(30), // Sudut melengkung
-                      ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => {Get.to(() => SignUpView())},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(30), // Sudut melengkung
                     ),
-                    child: Text('Register',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                        )),
                   ),
-                )
+                  child: Text('Register',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      )),
+                ),
+              )
             ],
           ),
         ),

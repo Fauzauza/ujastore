@@ -16,10 +16,10 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 40, 36, 52),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 53, 53, 68),
         title: Text('Pengaturan'),
-        backgroundColor:
-            Colors.blueAccent, // Ganti dengan warna yang lebih cerah
         actions: [
           Obx(() => Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -31,7 +31,6 @@ class SettingsPage extends StatelessWidget {
         ],
       ),
       body: Container(
-        color: Colors.grey[200], // Latar belakang yang lebih cerah
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
@@ -39,8 +38,9 @@ class SettingsPage extends StatelessWidget {
               Obx(() => GestureDetector(
                     onTap: () => _pickImage(controller),
                     child: CircleAvatar(
-                      backgroundImage: controller.profileImage != null
-                          ? FileImage(controller.profileImage!)
+                      backgroundImage: controller.imagePath.value.isNotEmpty
+                          ? NetworkImage(controller
+                              .imagePath.value) // Gunakan langsung sebagai URL
                           : null,
                       radius: 50,
                       child: controller.profileImage == null
