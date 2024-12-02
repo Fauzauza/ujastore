@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../controllers/profile_controller.dart';
-import 'login_view.dart';
-import 'signup_view.dart';
 
 class SettingsPage extends StatelessWidget {
   final ProfileController controller = Get.put(ProfileController());
   final TextEditingController nameController = TextEditingController();
 
-  SettingsPage({Key? key}) : super(key: key) {
+  SettingsPage({super.key}) {
     nameController.text = controller.userName.value;
   }
 
@@ -20,107 +18,162 @@ class SettingsPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 53, 53, 68),
         title: Text('Pengaturan'),
-        actions: [
-          Obx(() => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  controller.userName.value,
-                  style: TextStyle(color: Colors.white),
-                ),
-              )),
-        ],
       ),
       body: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Obx(() => GestureDetector(
-                    onTap: () => _pickImage(controller),
-                    child: CircleAvatar(
-                      backgroundImage: controller.imagePath.value.isNotEmpty
-                          ? NetworkImage(controller
-                              .imagePath.value) // Gunakan langsung sebagai URL
-                          : null,
-                      radius: 50,
-                      child: controller.profileImage == null
-                          ? Icon(Icons.camera_alt,
-                              size: 50, color: Colors.grey) // Placeholder
-                          : null,
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.blueAccent,
-                    ),
-                  )),
-              SizedBox(height: 10),
-              Obx(() => controller.profileImage != null
-                  ? ElevatedButton(
-                      onPressed: controller.removeProfileImage,
-                      child: Text('Hapus Gambar Profil'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent, // Warna tombol
-                        padding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                      ),
-                    )
-                  : Container()),
-              SizedBox(height: 20),
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Nama Pengguna',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white, // Warna latar belakang input
-                ),
-              ),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  controller.setUserName(nameController.text);
-                  controller.updateUserNameInFirestore(nameController.text);
-                },
-                child: Text('Simpan Nama'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.greenAccent, // Warna tombol
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                ),
-              ),
-              SizedBox(height: 20),
-              Obx(() {
-                return SwitchListTile(
-                  title: Text('Mode Gelap', style: TextStyle(fontSize: 18)),
-                  value: controller.isDarkMode.value,
-                  onChanged: (value) {
-                    controller.toggleTheme();
-                  },
-                  activeColor: Colors.blueAccent, // Warna aktif switch
-                );
-              }),
-              SizedBox(height: 20),
-              Obx(() {
-                return ElevatedButton(
-                  onPressed: controller.isLoggedIn.value
-                      ? null // Nonaktifkan tombol jika sudah login
-                      : () async {
-                          await controller.logout();
-                          Get.off(() => LoginView());
-                        },
-                  child: Text('Login'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orangeAccent, // Warna tombol
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+              Card(
+                color: Color.fromARGB(255, 40, 36, 52),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: Colors.white,
+                    width: 1,
                   ),
-                );
-              }),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Obx(
+                        () => ListTile(
+                          leading: GestureDetector(
+                            onTap: () => _pickImage(controller),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      color: Colors.white, width: 1)),
+                              child: CircleAvatar(
+                                radius: 30, // Ukuran avatar yang lebih besar
+                                backgroundImage: controller
+                                        .imagePath.value.isNotEmpty
+                                    ? NetworkImage(controller.imagePath
+                                        .value) // Gunakan langsung sebagai URL
+                                    : null,
+                                child: controller.profileImage == null
+                                    ? Text(
+                                        controller.userName.value.isNotEmpty
+                                            ? controller.userName.value[0]
+                                                .toUpperCase()
+                                            : 'U',
+                                        style: TextStyle(color: Colors.white),
+                                      )
+                                    : null,
+                              ),
+                            ),
+                          ),
+                          title: Obx(() => Text(
+                                controller.userName.value.isNotEmpty
+                                    ? controller.userName.value
+                                    : 'Nama Pengguna',
+                                style: TextStyle(
+                                  color: const Color.fromARGB(
+                                      255, 255, 255, 255), // Warna teks nama
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20, // Ukuran font lebih besar
+                                ),
+                              )),
+                          subtitle: Obx(() => Text(
+                                controller.email.value.isNotEmpty
+                                    ? controller.email.value
+                                    : 'Email tidak tersedia',
+                                style: TextStyle(
+                                  color: Colors.grey[600], // Warna teks email
+                                ),
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => SignUpView());
-                },
-                child: Text('Daftar'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlueAccent, // Warna tombol
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+              Card(
+                color: Color.fromARGB(255, 40, 36, 52),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: Colors.white,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Text(
+                          "Profile",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      Text(
+                        "Email",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      TextField(
+                        enabled: false,
+                        decoration: InputDecoration(
+                          hintText: controller.email.value,
+                          hintStyle: TextStyle(color: Colors.black),
+                          border: OutlineInputBorder(),
+                          filled: true,
+                          fillColor: Colors.white, // Warna latar belakang input
+                        ),
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Nama Pengguna",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            TextField(
+                              controller: nameController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                filled: true,
+                                fillColor: Colors.white, // Warna latar belakang input
+                              ),
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.setUserName(nameController.text);
+                            controller
+                                .updateUserNameInFirestore(nameController.text);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueAccent, // Warna tombol
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 20),
+                          ),
+                          child: Text('Simpan Perubahan', style: TextStyle(color: Colors.white),),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

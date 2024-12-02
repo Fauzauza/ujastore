@@ -9,10 +9,16 @@ class AboutController extends GetxController {
   final RxString locationMessage = "Mencari Lat dan Long...".obs;
   final RxBool loading = false.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    getCurrentLocation();
+  }
+
   Future<void> getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
-    loading.value = true; 
+    loading.value = true;
 
     try {
       serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -50,8 +56,9 @@ class AboutController extends GetxController {
   void openGoogleMaps() {
     if (_currentPosition.value != null) {
       final url =
-          'https://www.google.com/maps?q=${_currentPosition.value!.latitude},${_currentPosition.value!.longitude}';
+          'https://www.google.com/maps/dir/-7.9325575,112.6073671/Wisma+Zam-zam,+Gg.+12+No.3,+Dusun+Bend.,+Landungsari,+Dau,+Malang+Regency,+East+Java+65151/@${_currentPosition.value!.latitude},${_currentPosition.value!.longitude}';
       launchURL(url);
+      print(url);
     }
   }
 

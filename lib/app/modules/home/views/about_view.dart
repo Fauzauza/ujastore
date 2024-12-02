@@ -74,29 +74,7 @@ UjaStore adalah sebuah website yang menyediakan layanan top up game bagi pemain 
                 ],
               ),
             ),
-
-            // Lokasi Pengguna
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Koordinat Lokasi Pengguna:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Obx(() => Text(controller.locationMessage.value)),
             const SizedBox(height: 20),
-            controller.loading.value
-                ? const Center(child: CircularProgressIndicator())
-                : ElevatedButton(
-                    onPressed: controller.getCurrentLocation,
-                    child: const Text('Cari Lokasi'),
-                  ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: controller.openGoogleMaps,
-              child: const Text('Buka Google Maps'),
-            ),
 
             // Kantor Pusat
             Padding(
@@ -113,6 +91,21 @@ UjaStore adalah sebuah website yang menyediakan layanan top up game bagi pemain 
                 style: TextStyle(fontSize: 16),
               ),
             ),
+            SizedBox(height: 20,),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: controller.openGoogleMaps,
+              child: const Text(
+                'Buka Google Maps',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            SizedBox(height: 20,),
           ],
         ),
       ),

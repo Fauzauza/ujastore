@@ -29,8 +29,8 @@ void main() async {
   await messagingHandler.initLocalNotification();
   await messagingHandler.initPushNotification();
 
-  Get.put(CartController(), permanent: false); // Inisialisasi CartController
-  Get.put(AuthController(), permanent: true); // Inisialisasi AuthController
+  Get.put(CartController(), permanent: false);
+  Get.put(AuthController(), permanent: true); 
   Get.put(ImagePickerController());
 
   runApp(const MyApp());

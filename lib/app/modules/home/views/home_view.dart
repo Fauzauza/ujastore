@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ujastore/app/modules/home/views/about_view.dart';
 import 'package:ujastore/app/modules/home/views/all_games_page.dart';
+import 'package:ujastore/app/modules/home/views/complain_view.dart';
 import 'package:ujastore/app/modules/home/views/image_picker_view.dart';
 import 'package:ujastore/app/modules/home/views/login_view.dart';
 import 'package:ujastore/app/modules/home/views/profile_view.dart';
@@ -40,35 +41,39 @@ class _HomeViewState extends State<HomeView> {
                 width: 70,
                 height: 70,
               ),
-              profileController.isLoggedIn.value
-                  ? GestureDetector(
-                      onTap: () => Get.to(ProfilePage()),
-                      child: Obx(
-                        () => Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border:
-                                  Border.all(color: Colors.white, width: 1)),
-                          child: CircleAvatar(
-                            backgroundImage:
-                                profileController.imagePath.value.isNotEmpty
-                                    ? NetworkImage(profileController.imagePath.value) 
-                                    : null,
-                            child: profileController.profileImage == null
-                                ? Text(
-                                    profileController.userName.value.isNotEmpty
-                                        ? profileController.userName.value[0]
-                                            .toUpperCase()
-                                        : 'U',
-                                    style: TextStyle(color: Colors.white),
-                                  )
-                                : null,
-                            radius: 20,
+              Obx(
+                () => profileController.isLoggedIn.value
+                    ? GestureDetector(
+                        onTap: () => Get.to(ProfilePage()),
+                        child: Obx(
+                          () => Container(
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border:
+                                    Border.all(color: Colors.white, width: 1)),
+                            child: CircleAvatar(
+                              backgroundImage:
+                                  profileController.imagePath.value.isNotEmpty
+                                      ? NetworkImage(
+                                          profileController.imagePath.value)
+                                      : null,
+                              child: profileController.profileImage == null
+                                  ? Text(
+                                      profileController
+                                              .userName.value.isNotEmpty
+                                          ? profileController.userName.value[0]
+                                              .toUpperCase()
+                                          : 'U',
+                                      style: TextStyle(color: Colors.white),
+                                    )
+                                  : null,
+                              radius: 20,
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  : SizedBox.shrink(),
+                      )
+                    : SizedBox.shrink(),
+              )
             ],
           ),
           centerTitle: false,
@@ -109,11 +114,11 @@ class _HomeViewState extends State<HomeView> {
               _buildDrawerItem(Icons.info, 'Tentang Kami', onTap: () {
                 Get.to(() => AboutView()); // Navigasi ke halaman AboutView
               }),
-              profileController.isLoggedIn.value
+              Obx(() => profileController.isLoggedIn.value
                   ? SizedBox.shrink()
                   : _buildDrawerItem(Icons.person, 'Login', onTap: () {
                       Get.to(() => LoginView());
-                    }),
+                    })),
               Obx(() => profileController.isLoggedIn.value
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,6 +139,10 @@ class _HomeViewState extends State<HomeView> {
                         _buildDrawerItem(Icons.shopping_cart, 'Keranjang',
                             onTap: () {
                           Get.to(() => CartView());
+                        }),
+                        _buildDrawerItem(Icons.report, 'Pengajuan Komplain',
+                            onTap: () {
+                          Get.to(() => ComplaintPage());
                         }),
                         _buildDrawerItem(
                             Icons.logout,

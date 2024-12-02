@@ -5,6 +5,7 @@ import '../../../data/models/product_model.dart';
 import '../controllers/cart_controller.dart';
 import '../controllers/audio_controller.dart'; // Import AudioController
 import 'top_up_options.dart';
+import 'package:ujastore/app/modules/home/widgets/promo_banner_slider.dart'; // Import PromoBannerSlider
 
 class ProductDetailView extends StatefulWidget {
   final Product product;
@@ -17,8 +18,7 @@ class ProductDetailView extends StatefulWidget {
 
 class _ProductDetailViewState extends State<ProductDetailView> {
   final CartController cartController = Get.put(CartController());
-  final AudioController audioController =
-      Get.put(AudioController()); // Inisialisasi AudioController
+  final AudioController audioController = Get.put(AudioController());
 
   final TextEditingController userIdController = TextEditingController();
   final TextEditingController serverIdController = TextEditingController();
@@ -26,15 +26,14 @@ class _ProductDetailViewState extends State<ProductDetailView> {
   String selectedTitle = '';
   String selectedPrice = '';
 
-  // Fungsi untuk menambahkan item ke keranjang
   void addItemToCart() {
     CartItem item = CartItem(
-      itemId: '', // ID akan diisi oleh Firestore nanti
+      itemId: '',
       gameName: widget.product.name,
       itemName: selectedTitle,
       price: selectedPrice,
-      userId: userIdController.text, // Ambil dari input pengguna
-      serverId: serverIdController.text, // Ambil dari input pengguna
+      userId: userIdController.text,
+      serverId: serverIdController.text,
     );
 
     cartController.addToCart(item);
@@ -48,8 +47,8 @@ class _ProductDetailViewState extends State<ProductDetailView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Tentukan URL audio untuk produk tertentu
+  void initState() {
+    super.initState();
     String audioUrl = widget.product.name == 'Mobile Legends'
         ? 'https://drive.google.com/uc?export=download&id=1qTv2q3d0_np1-P5IZQQBqeovmVlxFn90' // URL untuk Mobile Legends
         : widget.product.name == 'PUBG'
@@ -83,14 +82,32 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                                                         ? 'https://drive.google.com/uc?export=download&id=1vbRQT4z-AgBVNYApVhZWhh9jgMaMGX81' // URL untuk Stumble Guys
                                                         : '';
 
+
+    if (audioUrl.isNotEmpty) {
+      audioController.playAudio(audioUrl);
+    }
+  }
+
+  @override
+  void dispose() {
+    audioController.stopAudio();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<String> bannerTexts = [
+      'Diskon 50% untuk semua produk!',
+      'Dapatkan gratis ongkir untuk pembelian di atas Rp 200.000!',
+      'Ikuti kami di media sosial untuk update promo terbaru!',
+    ];
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 40, 36, 52),
       appBar: AppBar(
         title: Text(
           widget.product.name,
-          style: TextStyle(
-            color: Colors.white,
-          ),
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color.fromARGB(255, 53, 53, 68),
       ),
@@ -100,44 +117,151 @@ class _ProductDetailViewState extends State<ProductDetailView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Gambar produk dengan border-radius dan bayangan
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 15,
-                        offset: Offset(0, 5),
+              // Promo Banner
+              PromoBannerSlider(
+                banners: bannerTexts,
+              ),
+              SizedBox(height: 10), // Mengurangi jarak di atas Promo Banner
+
+              // Row untuk menampilkan gambar dan nama game
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 15,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Image.network(
+                        widget.product.imageUrl,
+                        fit: BoxFit.cover,
+                        height: 120,
+                        width: 120,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.product.name,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.star,
+                            color: Colors.yellow,
+                            size: 18,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            '4.5 Rating',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.access_time,
+                            color: Colors.green,
+                            size: 18,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Updated: 2023',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  child: Image.network(
-                    widget.product.imageUrl,
-                    fit: BoxFit.cover,
-                    height: 250,
-                    width: double.infinity,
-                  ),
-                ),
+                ],
               ),
               SizedBox(height: 20),
 
-              // Nama produk dengan teks besar dan berat
-              Text(
-                widget.product.name,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(221, 255, 255, 255),
-                ),
-              ),
-              SizedBox(height: 12),
+              // Input untuk ID User dan ID Server (sejajar)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Row untuk Rating dan Update dipindah ke atas
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // ID User
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Masukkan User ID:',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                            ),
+                            SizedBox(height: 8),
+                            TextField(
+                              controller: userIdController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'User ID',
+                                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
-              // Pilihan top-up
+                      SizedBox(width: 16), // Jarak antar kolom
+
+                      // ID Server (tanpa label)
+                      Expanded(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 32),
+                            TextField(
+                              controller: serverIdController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: 'Server ID',
+                                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+
+              // Pilihan Top Up
               Text(
                 'Pilih Top Up:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
               ),
               SizedBox(height: 10),
               TopUpOptions(
@@ -149,80 +273,6 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                   });
                 },
               ),
-
-              // Form ID User dan ID Server dengan input styling
-              if (widget.product.name == 'Mobile Legends' ||
-                  widget.product.name == 'PUBG' ||
-                  widget.product.name == 'Honor of Kings' ||
-                  widget.product.name == 'Growtopia' ||
-                  widget.product.name == 'Free Fire' ||
-                  widget.product.name == 'LoL: Wild Rift' ||
-                  widget.product.name == 'Valorant' ||
-                  widget.product.name == 'Genshin Impact' ||
-                  widget.product.name == 'Call of Duty Mobile' ||
-                  widget.product.name == 'Arena of Valor' ||
-                  widget.product.name == 'Point Blank' ||
-                  widget.product.name == 'Ragnarok M: Eternal Love' ||
-                  widget.product.name == 'Stumble Guys') ...[
-                SizedBox(height: 20),
-                Text('ID User:',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                TextField(
-                  controller: userIdController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Masukkan ID User Anda',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text('ID Server:',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                TextField(
-                  controller: serverIdController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Masukkan ID Server Anda',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  ),
-                ),
-                SizedBox(height: 20),
-
-                // Tombol Play dan Stop Audio (menggunakan IconButton)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.play_arrow,
-                          size: 32,
-                          color: Colors.green), // Ukuran ikon dikurangi
-                      onPressed: () {
-                        audioController.playAudio(audioUrl); // Memutar audio
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.stop,
-                          size: 32, color: Colors.red), // Ukuran ikon dikurangi
-                      onPressed: () {
-                        audioController.stopAudio(); // Menghentikan audio
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Obx(() {
-                  return Text(
-                    audioController.isPlaying.value
-                        ? 'Audio is Playing'
-                        : 'Audio Stopped',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  );
-                }),
-              ],
 
               // Tombol Tambahkan ke Keranjang
               SizedBox(height: 20),
