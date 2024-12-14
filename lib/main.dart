@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ujastore/app/modules/home/bindings/home_binding.dart';
-import 'package:ujastore/app/modules/home/controllers/auth_controller.dart';
 import 'package:ujastore/app/modules/home/controllers/cart_controller.dart';
-import 'package:ujastore/app/modules/home/controllers/image_picker_controller.dart';
+import 'package:ujastore/app/modules/home/controllers/profile_controller.dart';
 import 'package:ujastore/app/modules/home/views/welcome_view.dart';
+import 'package:ujastore/dependency_injection.dart';
 import 'app/data/services/firebase_options.dart'; // Mengimpor konfigurasi Firebase
 import 'app/routes/app_pages.dart'; // Mengimpor pengaturan routing aplikasi
 import 'app/data/services/notification_handler.dart'; // Mengimpor NotificationHandler
@@ -20,8 +19,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Inisialisasi SharedPreferences dan GetStorage
-  await Get.putAsync(() async => await SharedPreferences.getInstance());
   await GetStorage.init();
 
   // Inisialisasi FirebaseMessagingHandler
@@ -30,10 +27,10 @@ void main() async {
   await messagingHandler.initPushNotification();
 
   Get.put(CartController(), permanent: false);
-  Get.put(AuthController(), permanent: true); 
-  Get.put(ImagePickerController());
+  Get.put(ProfileController(), permanent: true);
 
   runApp(const MyApp());
+  DependencyInjection.init();
 }
 
 class MyApp extends StatelessWidget {

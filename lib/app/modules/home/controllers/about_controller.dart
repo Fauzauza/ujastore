@@ -43,22 +43,21 @@ class AboutController extends GetxController {
         desiredAccuracy: LocationAccuracy.best,
       );
 
-      _currentPosition.value = position; // Update reactive variable
+      _currentPosition.value = position; 
       locationMessage.value =
           "Latitude: ${position.latitude}, Longitude:${position.longitude}";
     } catch (e) {
       locationMessage.value = 'Gagal mendapatkan lokasi';
     } finally {
-      loading.value = false; // Reset loading state
+      loading.value = false; 
     }
   }
 
   void openGoogleMaps() {
     if (_currentPosition.value != null) {
       final url =
-          'https://www.google.com/maps/dir/-7.9325575,112.6073671/Wisma+Zam-zam,+Gg.+12+No.3,+Dusun+Bend.,+Landungsari,+Dau,+Malang+Regency,+East+Java+65151/@${_currentPosition.value!.latitude},${_currentPosition.value!.longitude}';
+          'https://www.google.com/maps/dir/${_currentPosition.value!.latitude},${_currentPosition.value!.longitude}/Wisma+Zam-zam,+Gg.+12+No.3,+Dusun+Bend.,+Landungsari,+Dau,+Malang+Regency,+East+Java+65151/';
       launchURL(url);
-      print(url);
     }
   }
 

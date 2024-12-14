@@ -38,7 +38,7 @@ class HomeContent extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              ProductGrid(), // Menampilkan grid produk
+          ProductGrid(), // Menampilkan grid produk
             ],
           ),
         ),

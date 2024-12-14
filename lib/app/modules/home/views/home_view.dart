@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:ujastore/app/modules/home/views/about_view.dart';
 import 'package:ujastore/app/modules/home/views/all_games_page.dart';
 import 'package:ujastore/app/modules/home/views/complain_view.dart';
-import 'package:ujastore/app/modules/home/views/image_picker_view.dart';
 import 'package:ujastore/app/modules/home/views/login_view.dart';
 import 'package:ujastore/app/modules/home/views/profile_view.dart';
 import '../controllers/profile_controller.dart';
@@ -103,7 +102,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               _buildDrawerItem(Icons.home, 'Beranda', onTap: () {
-                Get.to(ImagePickerView());
+                Get.to(HomeView());
               }),
               _buildDrawerItem(Icons.games, 'Semua Game', onTap: () {
                 Get.to(AllGamesPage());
