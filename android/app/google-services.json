@@ -1,0 +1,29 @@
+{
+    "project_info": {
+      "project_number": "526973938578",
+      "project_id": "ujastore-84269",
+      "storage_bucket": "ujastore-84269.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:526973938578:android:529c14dccd6f665f142f4b",
+          "android_client_info": {
+            "package_name": "com.example.ujastore"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyAycQ6khSL67CFPO34INtkalZyP5t_veh0"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
