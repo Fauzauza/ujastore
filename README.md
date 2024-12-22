@@ -1,4 +1,4 @@
-# MyApp
+# UjaStore App
 
 Selamat datang di aplikasi UjaStore Unduh aplikasi terbaru dari tautan berikut:
 
